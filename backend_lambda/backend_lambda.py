@@ -7,10 +7,19 @@ import math
 def lambda_handler(event, context):
 
 # extract the two numbers from the Lambda service's event object
-    mathResult = math.pow(int(event['base']), int(event['exponent']))
+    base = int(event["base"])
+    exponent = int(event["exponent"])
+    event_str = json.dumps(event)
+    
+    math_result = math.pow(base, exponent)
+
+    response = {
+        "result": math_result,
+        "event": event_str
+    }
 
     # return a properly formatted JSON object
     return {
     'statusCode': 200,
-    'body': json.dumps('Your result is ' + str(mathResult))
+    'body': response
     }
