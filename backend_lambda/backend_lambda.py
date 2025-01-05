@@ -6,7 +6,6 @@ import math
 # define the handler function that the Lambda service will use an entry point
 def lambda_handler(event, context):
 
-    event_str = json.dumps(event)
     invoker = context.invoked_function_arn
 
     # If called from the function_url the event contains a lot of metadata, input is in "body"
@@ -25,7 +24,7 @@ def lambda_handler(event, context):
     response = {
         "result": math_result,
         "invoker": invoker,
-        "event": event_str
+        "event": event
     }
 
     # return a properly formatted JSON object
@@ -34,4 +33,4 @@ def lambda_handler(event, context):
         'statusCode': 200,
         "headers": {"Access-Control-Allow-Origin":"*"},
         "multiValueHeaders":{},
-        'body': response }
+        'body': json.dumps(response) }
