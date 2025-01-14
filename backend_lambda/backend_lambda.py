@@ -1,7 +1,23 @@
 # import the JSON utility package
 import json
+
+# For timestamping
+import time
+
 # import the Python math library
 import math
+
+# import the AWS SDK (for Python the package name is boto3)
+import boto3
+
+# Initial actions
+# create a DynamoDB object using the AWS SDK
+dynamodb = boto3.resource('dynamodb')
+# use the DynamoDB object to select our table
+dynamodb_table = dynamodb.Table('powerofmath')
+# store the current time in a human readable format in a variable
+now = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime())
+
 
 # define the handler function that the Lambda service will use an entry point
 def lambda_handler(event, context):
@@ -21,6 +37,13 @@ def lambda_handler(event, context):
     exponent = int(event_body["exponent"])
     math_result = math.pow(base, exponent)
 
+    db_response = dynamodb_table.put_item( Item={
+        'ID': str(math_result),
+        'LatestGreetingTime':now
+    })
+
+    
+    
     response = {
         "result": math_result,
         "invoker": invoker,
@@ -35,3 +58,6 @@ def lambda_handler(event, context):
         "headers": {"Access-Control-Allow-Origin":"*"},
         "multiValueHeaders":{},
         'body': json.dumps(response) }
+
+
+
