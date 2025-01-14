@@ -28,6 +28,7 @@ def lambda_handler(event, context):
     }
 
     # return a properly formatted JSON object
+    # IMPORTANT:  Body must be a string, not a dictionary. Otherwise proxy lambda will fail
     return {
         "isBase64Encoded": False,
         'statusCode': 200,
